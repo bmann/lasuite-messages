@@ -24,6 +24,7 @@ import {
   isSessionExpired,
   markLoginAttempt,
   markLoginFailed,
+  markSessionExpired,
 } from "./login-state";
 import { useConfig } from "../providers/config";
 import {
@@ -31,6 +32,7 @@ import {
   refreshWebPushSubscription,
 } from "../layouts/components/mailbox-settings/devices-view/web-push";
 import { attemptSilentLogin, canAttemptSilentLogin } from "./silent-login";
+import MailboxHelper from "@/features/utils/mailbox-helper";
 
 /**
  * Log the user out.
@@ -47,9 +49,17 @@ import { attemptSilentLogin, canAttemptSilentLogin } from "./silent-login";
  * The persisted compose windows are purged on both paths, expiry included:
  * they belong to the account, and on a shared device the next one to sign in
  * must not be handed the previous account's drafts to reopen.
+ *
+ * The last active mailbox remembered on this device follows the same split:
+ * a voluntary logout forgets it, an expired session keeps it so the user
+ * lands back on the mailbox they were working in once signed in again.
  */
-export const logout = () => {
+export const logout = ({ sessionExpired = false }: { sessionExpired?: boolean } = {}) => {
+  if (sessionExpired) markSessionExpired();
+  else MailboxHelper.clearLastActiveMailbox();
+
   clearPersistedWindows();
+
   if (isNativePlatform()) {
     void nativeLogout();
     return;

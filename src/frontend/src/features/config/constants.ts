@@ -25,6 +25,7 @@ export const OIDC_LOGIN_ATTEMPT_KEY = APP_STORAGE_PREFIX + "oidc-login-attempt";
 export const OIDC_LOGIN_FAILED_KEY = APP_STORAGE_PREFIX + "oidc-login-failed";
 export const EXPANDED_FOLDERS_KEY = APP_STORAGE_PREFIX + "expanded-folders";
 export const COMPOSE_WINDOWS_STORAGE_KEY = APP_STORAGE_PREFIX + "compose-windows";
+export const LAST_ACTIVE_MAILBOX_KEY = APP_STORAGE_PREFIX + "last-active-mailbox";
 
 
 // Enums

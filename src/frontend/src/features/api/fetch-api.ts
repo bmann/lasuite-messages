@@ -1,7 +1,6 @@
 // Inspired by https://github.com/orval-labs/orval/blob/master/samples/next-app-with-fetch/custom-fetch.ts
 
 import { logout } from "../auth";
-import { markSessionExpired } from "../auth/login-state";
 import { nativeFetch } from "../native/fetch";
 import { isNativePlatform } from "../native/platform";
 import { APIError } from "./api-error";
@@ -38,8 +37,7 @@ export const fetchAPI= async <T>(
     : await fetch(requestUrl, options);
 
   if (response.status === 401 && logoutOn401) {
-    markSessionExpired();
-    logout();
+    logout({ sessionExpired: true });
   }
 
   if (response.ok) {
