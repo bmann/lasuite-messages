@@ -12,10 +12,10 @@
 # this image directly and we don't want compilers in production images. Each
 # service adds its own build deps in a build-only stage.
 
-FROM debian:trixie-slim@sha256:28de0877c2189802884ccd20f15ee41c203573bd87bb6b883f5f46362d24c5c2 AS base
+FROM debian:trixie-slim@sha256:a99cfc517144bc59b1978475ec53b46ecabec7e43635402ee5b77cc54cd1b20a AS base
 
 # Bump to force an apt refresh + security upgrade of the base OS.
-ENV MIN_UPDATE_DATE="2026-07-08"
+ENV MIN_UPDATE_DATE="2026-09-21"
 
 RUN <<EOR
 apt-get update

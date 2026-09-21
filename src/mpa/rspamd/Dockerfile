@@ -1,7 +1,11 @@
-FROM debian:trixie-slim@sha256:28de0877c2189802884ccd20f15ee41c203573bd87bb6b883f5f46362d24c5c2
+FROM debian:trixie-slim@sha256:a99cfc517144bc59b1978475ec53b46ecabec7e43635402ee5b77cc54cd1b20a
+
+# Bump to force an apt refresh + security upgrade of the base OS.
+ENV MIN_UPDATE_DATE="2026-09-21"
 
 RUN apt-get update && \
-    apt-get install -y lsb-release wget gpg ruby nginx netcat-openbsd procps && \
+    DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y lsb-release wget gpg ruby nginx netcat-openbsd procps && \
     rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /etc/apt/keyrings
 RUN wget -O- https://rspamd.com/apt-stable/gpg.key | gpg --dearmor | tee /etc/apt/keyrings/rspamd.gpg > /dev/null

@@ -91,7 +91,7 @@ RUN wget -qO /usr/bin/lprobe "https://github.com/fivexl/lprobe/releases/download
        esac \
     && chmod +x /usr/bin/lprobe
 
-FROM gcr.io/distroless/static-debian13:nonroot AS runtime-prod
+FROM gcr.io/distroless/static-debian13:nonroot@sha256:e2e927ec666bae08560abb3c55d0659eceabb657f56b6782ab500a9fc7f555e3 AS runtime-prod
 
 COPY --from=tools-download /usr/bin/caddy /usr/bin/caddy
 COPY --from=tools-download /usr/bin/lprobe /usr/bin/lprobe
