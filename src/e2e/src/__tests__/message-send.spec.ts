@@ -29,7 +29,7 @@ test.describe("Send Message", () => {
     const fileChooser = await fileChooserPromise;
     await fileChooser.setFiles(path.join(FIXTURES_PATH, "attachment.png"));
 
-    await page.getByText("Draft saved").waitFor({ state: "visible" });
+    await page.getByLabel('Notifications').getByText('Draft saved').waitFor({ state: "visible" });
 
     // The number of drafts should be incremented by 1
     await draftBoxLink.locator("span.mailbox__item-counter", { hasText: (parseInt(initialDraftCount!) + 1).toString() }).waitFor({ state: "visible" });
@@ -93,7 +93,7 @@ test.describe("Send Message", () => {
     await composeWindow.locator(".ProseMirror").pressSequentially("Body typed before the subject");
     
     await composeWindow.getByRole("textbox", { name: "Subject" }).fill("Subject typed last");
-    await page.getByText("Draft saved").waitFor({ state: "visible" });
+    await page.getByLabel('Notifications').getByText('Draft saved').waitFor({ state: "visible" });
 
     // Touch devices do not move the focus to a tapped button, so the subject
     // field is never blurred before the send starts. A dispatched click

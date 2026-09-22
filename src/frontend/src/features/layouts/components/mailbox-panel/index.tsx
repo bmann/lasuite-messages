@@ -3,7 +3,6 @@ import { MailboxPanelActions } from "./components/mailbox-actions"
 import { MailboxList } from "./components/mailbox-list"
 import { useMailboxContext } from "@/features/providers/mailbox";
 import { useNavigate } from "@tanstack/react-router";
-import { useUrlSearchParams } from "@/hooks/use-url-search-params";
 import { useLayoutContext } from "@/features/layouts/components/layout-context";
 import { MailboxLabels } from "./components/mailbox-labels";
 import { MAILBOX_FOLDERS } from "./components/mailbox-list";
@@ -12,7 +11,6 @@ import { MailboxSelector } from "@/features/layouts/components/mailbox-selector"
 
 export const MailboxPanel = () => {
     const navigate = useNavigate();
-    const searchParams = useUrlSearchParams();
     const { selectedMailbox, mailboxes, queryStates } = useMailboxContext();
     const { closeLeftPanel } = useLayoutContext();
     const { defaultLayout, onLayoutChange } = useDefaultLayout({
@@ -32,10 +30,7 @@ export const MailboxPanel = () => {
                             selectedMailbox={selectedMailbox}
                             onSelect={(mailboxId) => {
                                 closeLeftPanel();
-                                const search = searchParams.has("search")
-                                    ? MAILBOX_FOLDERS()[0].filter
-                                    : Object.fromEntries(searchParams);
-                                navigate({ to: '/mailbox/$mailboxId', params: { mailboxId }, search });
+                                navigate({ to: '/mailbox/$mailboxId', params: { mailboxId }, search: MAILBOX_FOLDERS()[0].filter });
                             }}
                         />
                     </div>

@@ -565,15 +565,12 @@ export const MailboxProvider = ({ children }: PropsWithChildren) => {
      */
     const unselectThread = () => {
         const threadId = routeParams.threadId;
-        if (selectedMailbox && threadId && window.location.pathname.includes(threadId)) {
+        if (selectedMailbox && threadId && location.pathname.includes(threadId)) {
             // Unmount the thread view now (tearing down its auto-mark-as-read
             // observer before the mutation's cache patch lands), then clear the
             // flag once navigation has settled and `selectedThread` is null on
             // its own.
             setUnmountThreadViewNeeded(true);
-            // `search: (prev) => prev` keeps the current filter from the
-            // router's committed state, avoiding the stale read window.location
-            // would give mid-navigation.
             navigate({ to: '/mailbox/$mailboxId', params: { mailboxId: selectedMailbox.id }, search: (prev) => prev })
                 .finally(() => setUnmountThreadViewNeeded(false));
         }
