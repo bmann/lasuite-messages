@@ -1,0 +1,14 @@
+/*
+ * Avatar images from the AIP OIDC `picture` claim (OVHP-126).
+ * Consumers set `--avatar-url` via the `with-avatar-url` class to swap the
+ * lasuite initials circle for the user's image.
+ */
+.with-avatar-url .c__avatar {
+  background-image: var(--avatar-url, none);
+  background-size: cover;
+  background-position: center;
+}
+
+.with-avatar-url .c__avatar .c__avatar__initials {
+  color: transparent;
+}

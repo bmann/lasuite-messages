@@ -1,7 +1,20 @@
-import { DropdownMenu, HeaderProps, useResponsive, UserMenu, VerticalSeparator } from "@gouvfr-lasuite/ui-components";
-import { Controls, GearRounded, LeftPanel, Upload, XMark } from "@gouvfr-lasuite/ui-components/icons";
+import {
+  DropdownMenu,
+  HeaderProps,
+  useResponsive,
+  UserMenu,
+  VerticalSeparator,
+} from "@gouvfr-lasuite/ui-components";
+import {
+  Controls,
+  GearRounded,
+  LeftPanel,
+  Upload,
+  XMark,
+} from "@gouvfr-lasuite/ui-components/icons";
 import { Button, Tooltip } from "@gouvfr-lasuite/ui-components";
 import { useMemo, useState } from "react";
+import type { CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
 import { SearchInput } from "@/features/forms/components/search-input";
@@ -12,7 +25,12 @@ import { LanguagePicker } from "@/features/layouts/components/main/language-pick
 import { LagaufreButton } from "@/features/ui/components/lagaufre";
 import { SurveyButton } from "@/features/ui/components/feedback-button";
 import { useMailboxContext } from "@/features/providers/mailbox";
-import { ImportRun, MessageTemplateTypeChoices, useMailboxesImportsList, useMailboxesMessageTemplatesList } from "@/features/api/gen";
+import {
+  ImportRun,
+  MessageTemplateTypeChoices,
+  useMailboxesImportsList,
+  useMailboxesMessageTemplatesList,
+} from "@/features/api/gen";
 import { isTerminal } from "@/hooks/import-status";
 import { CircularProgress } from "@/features/ui/components/circular-progress";
 import { useTheme } from "@/features/providers/theme";
@@ -25,10 +43,9 @@ import { isNativePlatform } from "@/features/native/platform";
 import { Icon } from "@/features/ui/components/icon";
 import { useSearchQuery } from "@/features/forms/components/search-input/use-search-query";
 
-
 type AuthenticatedHeaderProps = HeaderProps & {
   hideSearch?: boolean;
-}
+};
 
 export const AuthenticatedHeader = ({
   leftIcon,
@@ -60,9 +77,7 @@ export const AuthenticatedHeader = ({
           icon={<Icon icon={isPanelOpen ? XMark : LeftPanel} />}
         />
       </div>
-      <div className="c__header__left">
-        {leftIcon}
-      </div>
+      <div className="c__header__left">{leftIcon}</div>
       {showSearchField && (
         <div className="c__header__center">
           <SearchInput />
@@ -129,7 +144,10 @@ const ImportIndicator = () => {
   const { selectedMailbox } = useMailboxContext();
   const { openModal } = useModalStore();
   const { t } = useTranslation();
-  const canImportMessages = useAbility(Abilities.CAN_IMPORT_MESSAGES, selectedMailbox);
+  const canImportMessages = useAbility(
+    Abilities.CAN_IMPORT_MESSAGES,
+    selectedMailbox,
+  );
 
   const { data } = useMailboxesImportsList(selectedMailbox?.id ?? "", {
     query: {
@@ -138,7 +156,9 @@ const ImportIndicator = () => {
       // importer modal's invalidations wake this query up on a new run.
       refetchInterval: (query) => {
         const rows = (query.state.data?.data as ImportRun[] | undefined) ?? [];
-        return rows.some((r) => r.is_active && !isTerminal(r.status)) ? 60000 : false;
+        return rows.some((r) => r.is_active && !isTerminal(r.status))
+          ? 60000
+          : false;
       },
     },
     // Background status poll: let foreground requests win the wire.
@@ -165,14 +185,14 @@ const ImportIndicator = () => {
   );
   const progress = withTotal.length
     ? Math.min(
-      99,
-      Math.round(
-        withTotal.reduce(
-          (sum, r) => sum + (r.progress ?? 0) * (r.total_messages ?? 0),
-          0,
-        ) / totalMessages,
-      ),
-    )
+        99,
+        Math.round(
+          withTotal.reduce(
+            (sum, r) => sum + (r.progress ?? 0) * (r.total_messages ?? 0),
+            0,
+          ) / totalMessages,
+        ),
+      )
     : null;
 
   return (
@@ -190,7 +210,9 @@ const ImportIndicator = () => {
           )
         }
         aria-label={t("Import in progress")}
-        onClick={() => openModal(MODAL_MAILBOX_SETTINGS_ID, { initialTab: "imports" })}
+        onClick={() =>
+          openModal(MODAL_MAILBOX_SETTINGS_ID, { initialTab: "imports" })
+        }
       />
     </Tooltip>
   );
@@ -211,20 +233,33 @@ export const HeaderRight = () => {
         {isDesktop && <VerticalSeparator size="24px" withPadding={false} />}
         {!isNativePlatform() && <LagaufreButton />}
       </div>
-      <UserMenu
-        user={user ? {
-          full_name: user.full_name ?? undefined,
-          email: user.email || ""
-        } : null}
-        logout={logout}
-        termOfServiceUrl={themeConfig.terms_of_service_url}
-        withMobileView={false}
-        actions={
-          <div className="user-menu__footer-action">
-            <LanguagePicker size="small" compact />
-          </div>
+      <span
+        className="with-avatar-url"
+        style={
+          user?.avatar
+            ? ({ "--avatar-url": user.avatar } as CSSProperties)
+            : undefined
         }
-      />
+      >
+        <UserMenu
+          user={
+            user
+              ? {
+                  full_name: user.full_name ?? undefined,
+                  email: user.email || "",
+                }
+              : null
+          }
+          logout={logout}
+          termOfServiceUrl={themeConfig.terms_of_service_url}
+          withMobileView={false}
+          actions={
+            <div className="user-menu__footer-action">
+              <LanguagePicker size="small" compact />
+            </div>
+          }
+        />
+      </span>
     </>
   );
 };
@@ -235,13 +270,29 @@ const ApplicationMenu = () => {
   const openImporter = useOpenImporter();
   const { selectedMailbox } = useMailboxContext();
   const isMobile = isNativePlatform();
-  const canAccessDomainAdmin = useAbility(Abilities.CAN_VIEW_DOMAIN_ADMIN) && !isMobile;
-  const canImportMessages = useAbility(Abilities.CAN_IMPORT_MESSAGES, selectedMailbox);
-  const canManageMessageTemplates = useAbility(Abilities.CAN_MANAGE_MESSAGE_TEMPLATES, selectedMailbox);
-  const isIntegrationsEnabled = useFeatureFlag(FEATURE_KEYS.MAILBOX_ADMIN_CHANNELS);
-  const canManageIntegrations = canManageMessageTemplates && isIntegrationsEnabled;
-  const canAdministrateSelectedMailbox = useAbility(Abilities.CAN_MANAGE_ACCESSES, selectedMailbox);
-  const canOpenMailboxSettings = canAdministrateSelectedMailbox || canManageMessageTemplates || canManageIntegrations;
+  const canAccessDomainAdmin =
+    useAbility(Abilities.CAN_VIEW_DOMAIN_ADMIN) && !isMobile;
+  const canImportMessages = useAbility(
+    Abilities.CAN_IMPORT_MESSAGES,
+    selectedMailbox,
+  );
+  const canManageMessageTemplates = useAbility(
+    Abilities.CAN_MANAGE_MESSAGE_TEMPLATES,
+    selectedMailbox,
+  );
+  const isIntegrationsEnabled = useFeatureFlag(
+    FEATURE_KEYS.MAILBOX_ADMIN_CHANNELS,
+  );
+  const canManageIntegrations =
+    canManageMessageTemplates && isIntegrationsEnabled;
+  const canAdministrateSelectedMailbox = useAbility(
+    Abilities.CAN_MANAGE_ACCESSES,
+    selectedMailbox,
+  );
+  const canOpenMailboxSettings =
+    canAdministrateSelectedMailbox ||
+    canManageMessageTemplates ||
+    canManageIntegrations;
   // Notifications/devices are user-scoped, so every user sees this entry when
   // push is enabled — independent of any mailbox ability.
   const config = useConfig();
@@ -249,14 +300,18 @@ const ApplicationMenu = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const hasOptions = canAccessDomainAdmin || canImportMessages || canOpenMailboxSettings || canManageNotifications;
+  const hasOptions =
+    canAccessDomainAdmin ||
+    canImportMessages ||
+    canOpenMailboxSettings ||
+    canManageNotifications;
   // Live progress moved to the header ImportIndicator (which reads the imports
   // resource); the menu entry just opens the importer.
   const importMessageOption = {
     label: t("Import messages"),
     icon: <Upload />,
     callback: openImporter,
-    showSeparator: canAccessDomainAdmin
+    showSeparator: canAccessDomainAdmin,
   };
 
   if (!hasOptions) {
@@ -280,24 +335,36 @@ const ApplicationMenu = () => {
         isOpen={isDropdownOpen}
         onOpenChange={setIsDropdownOpen}
         options={[
-          ...(canOpenMailboxSettings ? [{
-            label: t("All settings"),
-            icon: <Controls size="medium" />,
-            callback: () => openModal(MODAL_MAILBOX_SETTINGS_ID),
-            showSeparator: canAccessDomainAdmin && !canImportMessages
-          }] : []),
+          ...(canOpenMailboxSettings
+            ? [
+                {
+                  label: t("All settings"),
+                  icon: <Controls size="medium" />,
+                  callback: () => openModal(MODAL_MAILBOX_SETTINGS_ID),
+                  showSeparator: canAccessDomainAdmin && !canImportMessages,
+                },
+              ]
+            : []),
           ...(canImportMessages ? [importMessageOption] : []),
-          ...(canManageNotifications ? [{
-            label: t("Notifications"),
-            icon: <Icon name="notifications" />,
-            callback: () => openModal(MODAL_NOTIFICATIONS_ID),
-            showSeparator: canAccessDomainAdmin,
-          }] : []),
-          ...(canAccessDomainAdmin ? [{
-            label: t("Domain admin"),
-            icon: <Icon name="domain" />,
-            callback: () => navigate({ to: "/domain" }),
-          }] : []),
+          ...(canManageNotifications
+            ? [
+                {
+                  label: t("Notifications"),
+                  icon: <Icon name="notifications" />,
+                  callback: () => openModal(MODAL_NOTIFICATIONS_ID),
+                  showSeparator: canAccessDomainAdmin,
+                },
+              ]
+            : []),
+          ...(canAccessDomainAdmin
+            ? [
+                {
+                  label: t("Domain admin"),
+                  icon: <Icon name="domain" />,
+                  callback: () => navigate({ to: "/domain" }),
+                },
+              ]
+            : []),
         ]}
       >
         <Button
@@ -309,5 +376,5 @@ const ApplicationMenu = () => {
         />
       </DropdownMenu>
     </>
-  )
-}
+  );
+};

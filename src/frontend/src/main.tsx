@@ -1,5 +1,6 @@
 import "@blocknote/mantine/style.css";
 import "./styles/main.scss";
+import "./styles/avatars.css";
 
 import { bootstrap } from "./bootstrap";
 import { installRandomUUIDPolyfill } from "@/features/utils/uuid";
