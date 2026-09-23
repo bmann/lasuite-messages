@@ -210,6 +210,7 @@ class User(AbstractBaseUser, BaseModel, auth_models.PermissionsMixin):
     )
 
     full_name = models.CharField("full name", max_length=255, null=True, blank=True)
+    avatar = models.URLField("avatar", max_length=1024, blank=True, null=True)
 
     email = models.EmailField("identity email address", blank=True, null=True)
 

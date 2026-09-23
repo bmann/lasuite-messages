@@ -171,6 +171,10 @@ class OIDCAuthenticationBackend(LaSuiteOIDCAuthenticationBackend):
         """Get extra claims."""
         return {
             "full_name": self.compute_full_name(user_info),
+            # AIP mirrors the atproto profile avatar and emits it as the
+            # standard OIDC `picture` claim (public URL) — stored so threads,
+            # IM chat and assignees can show avatars (OVHP-126).
+            "avatar": user_info.get("picture"),
         }
 
     def get_existing_user(self, sub, email):

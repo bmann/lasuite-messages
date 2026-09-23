@@ -66,6 +66,7 @@ class ThreadEventUserSerializer(serializers.Serializer):
 
     id = serializers.UUIDField()
     name = serializers.CharField()
+    avatar = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
     def create(self, validated_data):
         """Do not allow creating instances from this serializer."""
@@ -294,7 +295,7 @@ class UserSerializer(AbilitiesModelSerializer):
 
     class Meta:
         model = models.User
-        fields = ["id", "email", "full_name", "custom_attributes"]
+        fields = ["id", "email", "full_name", "avatar", "custom_attributes"]
         read_only_fields = fields
 
     @extend_schema_field(
@@ -1022,7 +1023,11 @@ class ThreadSerializer(serializers.ModelSerializer):
                 .order_by("created_at")
             )
         return [
-            {"id": str(event.user.id), "name": event.user.full_name or ""}
+            {
+                "id": str(event.user.id),
+                "name": event.user.full_name or "",
+                "avatar": event.user.avatar or None,
+            }
             for event in cached
         ]
 

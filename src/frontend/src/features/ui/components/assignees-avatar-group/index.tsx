@@ -1,8 +1,9 @@
-import { UserAvatar } from "@gouvfr-lasuite/ui-components";
+import { UserAvatar } from "@/features/ui/components/user-avatar";
 
 export type AssigneesAvatarGroupUser = {
-    id: string;
-    name: string;
+  id: string;
+  name: string;
+  avatar?: string | null;
 };
 
 export type AssigneesAvatarGroupOverflowMode = "extra" | "replace-last";
@@ -10,10 +11,10 @@ export type AssigneesAvatarGroupOverflowMode = "extra" | "replace-last";
 export type AssigneesAvatarGroupSize = "xsmall" | "small" | "medium" | "large";
 
 type AssigneesAvatarGroupProps = {
-    users: ReadonlyArray<AssigneesAvatarGroupUser>;
-    maxAvatars: number;
-    overflowMode?: AssigneesAvatarGroupOverflowMode;
-    size?: AssigneesAvatarGroupSize;
+  users: ReadonlyArray<AssigneesAvatarGroupUser>;
+  maxAvatars: number;
+  overflowMode?: AssigneesAvatarGroupOverflowMode;
+  size?: AssigneesAvatarGroupSize;
 };
 
 /**
@@ -30,30 +31,36 @@ type AssigneesAvatarGroupProps = {
  * The parent owns any surrounding interactive wrapper (tooltip, button...).
  */
 export const AssigneesAvatarGroup = ({
-    users,
-    maxAvatars,
-    overflowMode = "extra",
-    size = "xsmall",
+  users,
+  maxAvatars,
+  overflowMode = "extra",
+  size = "xsmall",
 }: AssigneesAvatarGroupProps) => {
-    if (users.length === 0) return null;
+  if (users.length === 0) return null;
 
-    const hasOverflow = users.length > maxAvatars;
-    const avatarCount = hasOverflow && overflowMode === "replace-last"
-        ? Math.max(maxAvatars - 1, 0)
-        : Math.min(users.length, maxAvatars);
-    const visible = users.slice(0, avatarCount);
-    const overflow = users.length - avatarCount;
+  const hasOverflow = users.length > maxAvatars;
+  const avatarCount =
+    hasOverflow && overflowMode === "replace-last"
+      ? Math.max(maxAvatars - 1, 0)
+      : Math.min(users.length, maxAvatars);
+  const visible = users.slice(0, avatarCount);
+  const overflow = users.length - avatarCount;
 
-    return (
-        <span className="assignees-avatar-group" data-size={size}>
-            {visible.map((user) => (
-                <UserAvatar key={user.id} fullName={user.name} size={size} />
-            ))}
-            {overflow > 0 && (
-                <span className="assignees-avatar-group__overflow" aria-hidden="true">
-                    +{overflow}
-                </span>
-            )}
+  return (
+    <span className="assignees-avatar-group" data-size={size}>
+      {visible.map((user) => (
+        <UserAvatar
+          key={user.id}
+          fullName={user.name}
+          size={size}
+          avatarUrl={user.avatar ?? undefined}
+        />
+      ))}
+      {overflow > 0 && (
+        <span className="assignees-avatar-group__overflow" aria-hidden="true">
+          +{overflow}
         </span>
-    );
+      )}
+    </span>
+  );
 };

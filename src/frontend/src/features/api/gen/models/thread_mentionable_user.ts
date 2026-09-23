@@ -17,6 +17,8 @@ export type ThreadMentionableUser = {
   readonly email: string | null;
   /** @nullable */
   readonly full_name: string | null;
+  /** Avatar URL from the AIP OIDC picture claim (public AIP-hosted URL). */
+  readonly avatar?: string | null;
   /** Get custom attributes for the instance. */
   readonly custom_attributes: ThreadMentionableUserCustomAttributes;
   readonly can_post_comments: boolean;

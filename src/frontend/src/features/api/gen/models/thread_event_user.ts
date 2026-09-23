@@ -18,4 +18,5 @@ by the generated frontend client.
 export type ThreadEventUser = {
   id: string;
   name: string;
+  avatar?: string | null;
 };

@@ -19,6 +19,8 @@ export type UserWithAbilities = {
   readonly email: string | null;
   /** @nullable */
   readonly full_name: string | null;
+  /** Avatar URL from the AIP OIDC picture claim (public AIP-hosted URL). */
+  readonly avatar?: string | null;
   /** Get custom attributes for the instance. */
   readonly custom_attributes: UserWithAbilitiesCustomAttributes;
   /** Return the session-bound CSRF token for the SPA to echo as X-CSRFToken.
