@@ -20,7 +20,7 @@ type UserAvatarProps = Omit<
    * Avatar image URL (from the AIP OIDC `picture` claim). When present the
    * image is shown with the initials circle as a fallback (OVHP-126).
    */
-  avatarUrl?: string;
+  avatarUrl?: string | null;
   size?: UserAvatarSize;
 };
 
