@@ -2253,9 +2253,16 @@ class ImportRunSerializer(serializers.ModelSerializer):
         """The IMAP login shown in the imports UI (``None`` for file imports).
 
         Only the (non-secret) login is ever exposed — never the rest of the
-        stored credentials.
+        stored credentials. ``encrypted_settings`` is an EncryptedJSONField but
+        legacy rows can hold the raw (JSON) string — tolerate both.
         """
-        return ((obj.encrypted_settings or {}).get("imap") or {}).get("username")
+        raw = obj.encrypted_settings or {}
+        if isinstance(raw, str):
+            try:
+                raw = json.loads(raw)
+            except (ValueError, TypeError):
+                raw = {}
+        return ((raw or {}).get("imap") or {}).get("username")
 
     @extend_schema_field(serializers.IntegerField())
     def get_total_messages(self, obj):
