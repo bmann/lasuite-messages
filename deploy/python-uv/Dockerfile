@@ -33,8 +33,8 @@ WORKDIR /app
 FROM base AS uv
 
 # Pin uv by SHA256 digest for supply chain security.
-# Verify with: gh attestation verify --owner astral-sh oci://ghcr.io/astral-sh/uv:0.12.13
-COPY --from=ghcr.io/astral-sh/uv@sha256:b485bd65cc2cf1c9a93b3554012c9c3778cf7b1b5fd3d3096ce9e1226c97e1e6 /uv /uvx /bin/
+# Verify with: gh attestation verify --owner astral-sh oci://ghcr.io/astral-sh/uv:0.13.4
+COPY --from=ghcr.io/astral-sh/uv@sha256:9f130421e930bfbdc563c00740466603f8723158e90297d07957c2294640262b /uv /uvx /bin/
 
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
