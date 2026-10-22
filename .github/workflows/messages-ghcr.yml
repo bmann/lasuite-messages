@@ -1,6 +1,7 @@
 name: Build and publish OCI images
 
 "on":
+  workflow_dispatch:
   push:
     branches:
       - main
