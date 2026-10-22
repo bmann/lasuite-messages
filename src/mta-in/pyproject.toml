@@ -29,6 +29,7 @@ requires-python = ">=3.14.7,<4.0"
 dependencies = [
     "PyJWT==2.13.0",
     "aiosmtpd==1.4.6",
+    "certifi>=2026.10.19",  # eMudhra emSign CA compromise (CVE-2026-111943 / GHSA-6q48-6c7w-9gw2)
     "httpx==0.28.1",
     "prometheus-client==0.25.0",
 ]
